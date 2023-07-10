@@ -1,43 +1,69 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import skills from "./skillsData";
+import SkillCard from "./SkillCard";
+import Box from "@mui/material/Box";
 
 const App = () => {
-  const skills = [
-    {
-      name: "woodcutting",
-      experience: 0,
-      tickCount: 0,
-      tickInterval: 2000, //Time in ms between each tick
-      tickExperience: 10, //Experience gained per tick
-    },
-    {
-      name: "mining",
-      experience: 0,
-      tickCount: 0,
-      tickInterval: 1000, //Time in ms between each tick
-      tickExperience: 5, //Experience gained per tick
-    },
-  ];
+  const gameTickMS = 200;
+  const [skillsData, setSkillsData] = useState(skills);
 
   function gameTick() {
-    for (const skill of skills) {
-      skill.tickCount++;
-      skill.experience += skill.tickExperience;
+    setSkillsData((prevSkills) => {
+      const updatedSkills = prevSkills.map((skill) => {
+        const updatedSkill = { ...skill };
+        updatedSkill.tickCount += gameTickMS;
 
-      // Check if the skill has reached a certain tick count
-      // You can adjust this condition based on your game's requirements
-      if (skill.tickCount >= 10) {
-        skill.tickCount = 0;
-        skill.tickExperience += 2; // Increase the experience gained per tick
-      }
-      console.log(`${skill.name}: ${skill.experience}`);
-    }
+        // Check if the skill has reached its tickInterval
+        if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
+          updatedSkill.tickCount = 0;
+          updatedSkill.experience += updatedSkill.tickExperience;
+        }
 
-    // Perform any other game logic here
+        // Check if the skill has reached a certain tick count
+        // You can adjust this condition based on your game's requirements
+        // if (updatedSkill.tickCount >= 10) {
+        //   updatedSkill.tickExperience += 2; // Increase the experience gained per tick
+        // }
+
+        return updatedSkill;
+      });
+
+      return updatedSkills;
+    });
   }
+
+  const targetExperience = 900;
+  const tickInterval = 1000;
+  const tickExperience = 10;
+
+  const timeToReachExperience = calculateTimeToReachExperience(
+    targetExperience,
+    tickInterval,
+    tickExperience
+  );
+
+  const minutes = Math.floor(timeToReachExperience / 60);
+  const seconds = Math.round(timeToReachExperience % 60);
+
+  console.log(
+    `Time to reach ${targetExperience} experience: ${minutes} minutes ${seconds} seconds`
+  );
+
+  function calculateTimeToReachExperience(
+    targetExperience,
+    tickInterval,
+    tickExperience
+  ) {
+    const timeInSeconds =
+      (targetExperience / tickExperience) * (tickInterval / 1000);
+    return timeInSeconds;
+  }
+
+  // console.log(`${skillsData[0].name}: ${skillsData[0].experience}`);
 
   useEffect(() => {
     // Start the game loop when the component mounts
-    const gameLoop = setInterval(gameTick, 1000);
+    const gameLoop = setInterval(gameTick, gameTickMS);
 
     // Clean up the interval when the component unmounts
     return () => {
@@ -45,7 +71,13 @@ const App = () => {
     };
   }, []); // Empty dependency array ensures the effect runs only once
 
-  return <div>{console.log(skills[0], skills[1])}</div>;
+  return (
+    <Box sx={{ display: "flex" }}>
+      {skillsData.map((skill) => (
+        <SkillCard key={skill.name} skill={skill} />
+      ))}
+    </Box>
+  );
 };
 
 export default App;
