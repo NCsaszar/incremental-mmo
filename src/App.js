@@ -64,8 +64,6 @@ const App = () => {
     return timeInSeconds;
   }
 
-  // console.log(`${skillsData[0].name}: ${skillsData[0].experience}`);
-
   useEffect(() => {
     // Start the game loop when the component mounts
     const gameLoop = setInterval(gameTick, gameTickMS);
