@@ -4,6 +4,23 @@ import SkillCard from "./Skills/SkillCard";
 import Box from "@mui/material/Box";
 import resources from "./Skillresources/resources";
 
+// This function will return updated skill object
+const updateSkill = (skill, gameTickMS, maxExperience) => {
+  const updatedSkill = { ...skill };
+  updatedSkill.tickCount += gameTickMS;
+
+  if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
+    updatedSkill.tickCount = 0;
+    if (updatedSkill.experience < maxExperience) {
+      updatedSkill.experience += updatedSkill.tickExperience;
+    } else {
+      updatedSkill.experience = maxExperience;
+    }
+  }
+
+  return updatedSkill;
+};
+
 const App = () => {
   const gameTickMS = 200;
   const maxExperience = 900;
@@ -12,40 +29,28 @@ const App = () => {
 
   function gameTick() {
     setSkillsData((prevSkills) => {
-      // Copy the resData state to a new array
-      let newResData = [...resData];
-      const updatedSkills = prevSkills.map((skill, index) => {
-        const updatedSkill = { ...skill };
-        updatedSkill.tickCount += gameTickMS;
+      const updatedSkills = prevSkills.map((skill) =>
+        updateSkill(skill, gameTickMS, maxExperience)
+      );
 
-        // Check if the skill has reached its tickInterval
-        if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
-          updatedSkill.tickCount = 0;
-          if (updatedSkill.experience < maxExperience) {
-            updatedSkill.experience += updatedSkill.tickExperience;
+      setResData((prevResData) => {
+        return prevResData.map((resource) => {
+          // find the corresponding skill for this resource
+          const correspondingSkill = updatedSkills.find(
+            (skill) => skill.name === resource.skill
+          );
 
-            // Update the corresponding resource in the new array
-            const resourceIndex = newResData.findIndex(
-              (resource) => resource.skill === updatedSkill.name
-            );
-            if (resourceIndex !== -1) {
-              newResData[resourceIndex] = {
-                ...newResData[resourceIndex],
-                qty:
-                  newResData[resourceIndex].qty +
-                  newResData[resourceIndex].base,
-              };
-            }
-          } else {
-            updatedSkill.experience = maxExperience;
+          if (
+            correspondingSkill &&
+            correspondingSkill.tickCount === 0 &&
+            correspondingSkill.experience < maxExperience
+          ) {
+            return { ...resource, qty: resource.qty + resource.base };
           }
-        }
 
-        return updatedSkill;
+          return resource;
+        });
       });
-
-      // Update resData state here, after all resource updates have been made
-      setResData(newResData);
 
       return updatedSkills;
     });
