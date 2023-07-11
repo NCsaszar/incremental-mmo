@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import levels from "./Levels";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { LinearProgress } from "@mui/material";
+import { styled } from "@mui/system";
+
+const ProgressBar = styled(LinearProgress)(({ theme }) => ({
+  height: 25, // Adjust the height as per your preference
+  borderRadius: 12, // Optionally, adjust the border radius
+}));
 
 const ExperienceBar = ({ experience }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
@@ -17,7 +23,7 @@ const ExperienceBar = ({ experience }) => {
   }, [experience]);
 
   const getLevel = (experience) => {
-    let currentLevel = 1;
+    let currentLevel;
     Object.entries(levels).forEach(([level, levelExperience]) => {
       if (experience >= levelExperience) {
         currentLevel = parseInt(level);
@@ -26,20 +32,31 @@ const ExperienceBar = ({ experience }) => {
     return currentLevel;
   };
 
-  const progress = Math.min((experience / nextLevelExperience) * 100, 100);
-  const isLevelUp = experience >= nextLevelExperience;
+  const currentLevelExperience = levels[currentLevel];
+  const experienceRange = nextLevelExperience - currentLevelExperience;
+
+  const progress = Math.round(
+    ((experience - currentLevelExperience) / experienceRange) * 100
+  );
 
   return (
     <>
-      <Box>
-        <Box>Experience: {experience}</Box>
-        <Box>
-          <LinearProgress
-            variant="determinate"
-            value={isLevelUp ? 0 : progress}
-          />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          maxWidth: "75%",
+          width: "150px",
+          margin: "20px",
+        }}
+      >
+        <Typography>Experience: {experience}</Typography>
+        <Typography>Level: {currentLevel}/10</Typography>
+        <Box sx={{ width: "100%" }}>
+          <ProgressBar variant="determinate" value={progress} />
         </Box>
-        <Box>Level: {currentLevel}/10</Box>
       </Box>
     </>
   );
