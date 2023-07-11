@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 
 const App = () => {
   const gameTickMS = 200;
+  const maxExperience = 900;
   const [skillsData, setSkillsData] = useState(skills);
 
   function gameTick() {
@@ -16,7 +17,11 @@ const App = () => {
         // Check if the skill has reached its tickInterval
         if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
           updatedSkill.tickCount = 0;
-          updatedSkill.experience += updatedSkill.tickExperience;
+          if (updatedSkill.experience < maxExperience) {
+            updatedSkill.experience += updatedSkill.tickExperience;
+          } else {
+            updatedSkill.experience = 900;
+          }
         }
 
         // Check if the skill has reached a certain tick count
@@ -72,7 +77,7 @@ const App = () => {
   }, []); // Empty dependency array ensures the effect runs only once
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
       {skillsData.map((skill) => (
         <SkillCard key={skill.name} skill={skill} />
       ))}

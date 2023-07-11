@@ -13,5 +13,19 @@ const skills = [
     tickInterval: 1000,
     tickExperience: 10,
   },
+  {
+    name: "Fishing",
+    experience: 0,
+    tickCount: 0,
+    tickInterval: 3000,
+    tickExperience: 10,
+  },
+  {
+    name: "Hunting",
+    experience: 0,
+    tickCount: 0,
+    tickInterval: 1500,
+    tickExperience: 10,
+  },
 ];
 export default skills;

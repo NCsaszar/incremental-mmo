@@ -5,6 +5,8 @@ import { Typography } from "@mui/material";
 import ExperienceBar from "./ExperienceBar";
 import tree from "./skillpics/tree.png";
 import rock from "./skillpics/rock.png";
+import fish from "./skillpics/fish.png";
+import hunt from "./skillpics/hunt.png";
 
 const SkillCard = ({ skill }) => {
   let skillImage;
@@ -12,6 +14,10 @@ const SkillCard = ({ skill }) => {
     skillImage = tree;
   } else if (skill.name == "Mining") {
     skillImage = rock;
+  } else if (skill.name == "Fishing") {
+    skillImage = fish;
+  } else if (skill.name == "Hunting") {
+    skillImage = hunt;
   }
   const gradientBackground =
     "radial-gradient(circle, rgba(187,187,187,1) 35%, rgba(11,251,241,1) 100%, rgba(69,89,93,1) 100%)";
