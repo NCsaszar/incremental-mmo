@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import levels from "./Levels";
+import levels from "../Levels";
 import { Box, Typography } from "@mui/material";
 import { LinearProgress } from "@mui/material";
 import { styled } from "@mui/system";

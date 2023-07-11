@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import skills from "./skillsData";
-import SkillCard from "./SkillCard";
+import skills from "./Skills/skillsData";
+import SkillCard from "./Skills/SkillCard";
 import Box from "@mui/material/Box";
+import resources from "./Skillresources/resources";
 
 const App = () => {
   const gameTickMS = 200;
   const maxExperience = 900;
   const [skillsData, setSkillsData] = useState(skills);
+  const [resData, setResData] = useState(resources);
 
   function gameTick() {
     setSkillsData((prevSkills) => {
-      const updatedSkills = prevSkills.map((skill) => {
+      // Copy the resData state to a new array
+      let newResData = [...resData];
+      const updatedSkills = prevSkills.map((skill, index) => {
         const updatedSkill = { ...skill };
         updatedSkill.tickCount += gameTickMS;
 
@@ -19,23 +23,35 @@ const App = () => {
           updatedSkill.tickCount = 0;
           if (updatedSkill.experience < maxExperience) {
             updatedSkill.experience += updatedSkill.tickExperience;
+
+            // Update the corresponding resource in the new array
+            const resourceIndex = newResData.findIndex(
+              (resource) => resource.skill === updatedSkill.name
+            );
+            if (resourceIndex !== -1) {
+              newResData[resourceIndex] = {
+                ...newResData[resourceIndex],
+                qty:
+                  newResData[resourceIndex].qty +
+                  newResData[resourceIndex].base,
+              };
+            }
           } else {
-            updatedSkill.experience = 900;
+            updatedSkill.experience = maxExperience;
           }
         }
-
-        // Check if the skill has reached a certain tick count
-        // You can adjust this condition based on your game's requirements
-        // if (updatedSkill.tickCount >= 10) {
-        //   updatedSkill.tickExperience += 2; // Increase the experience gained per tick
-        // }
 
         return updatedSkill;
       });
 
+      // Update resData state here, after all resource updates have been made
+      setResData(newResData);
+
       return updatedSkills;
     });
   }
+
+  console.log(resData);
 
   const targetExperience = 900;
   const tickInterval = 1000;
