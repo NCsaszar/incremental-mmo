@@ -72,7 +72,8 @@ const App = () => {
     return () => {
       clearInterval(gameLoop);
     };
-  }, []); // Empty dependency array ensures the effect runs only once
+  }, []);
+  // Empty dependency array ensures the effect runs only once
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
