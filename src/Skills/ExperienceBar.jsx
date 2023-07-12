@@ -9,7 +9,7 @@ const ProgressBar = styled(LinearProgress)(({ theme }) => ({
   borderRadius: 12, // Optionally, adjust the border radius
 }));
 
-const ExperienceBar = ({ experience }) => {
+const ExperienceBar = ({ experience, mExp }) => {
   const [currentLevel, setCurrentLevel] = useState(1);
   const [nextLevelExperience, setNextLevelExperience] = useState(
     levels[currentLevel + 1]
@@ -55,7 +55,10 @@ const ExperienceBar = ({ experience }) => {
         <Typography>Experience: {experience}</Typography>
         <Typography>Level: {currentLevel}/10</Typography>
         <Box sx={{ width: "100%" }}>
-          <ProgressBar variant="determinate" value={progress} />
+          <ProgressBar
+            variant="determinate"
+            value={experience == mExp ? 100 : progress}
+          />
         </Box>
       </Box>
     </>

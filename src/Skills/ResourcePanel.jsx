@@ -8,11 +8,12 @@ import leather from "../resourcepics/leather.png";
 import coins from "../resourcepics/coins.png";
 import { Typography } from "@mui/material";
 
-const ResourcePanel = ({ resources }) => {
+const ResourcePanel = ({ resources, charItems }) => {
   let fishCt = resources.filter((res) => res.name == "fish")[0].qty;
   let logCt = resources.filter((res) => res.name == "log")[0].qty;
   let oreCt = resources.filter((res) => res.name == "ore")[0].qty;
   let leatherCt = resources.filter((res) => res.name == "leather")[0].qty;
+  let coinsCt = charItems.filter((item) => item.name == "coins")[0].qty;
 
   return (
     <Card
@@ -54,7 +55,7 @@ const ResourcePanel = ({ resources }) => {
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <img src={coins} alt="coins" />
-        <Typography sx={{ mx: "10px" }}>{0}</Typography>
+        <Typography sx={{ mx: "10px" }}>{coinsCt}</Typography>
       </Box>
     </Card>
   );

@@ -8,7 +8,7 @@ import rock from "../skillpics/rock.png";
 import fish from "../skillpics/fish.png";
 import hunt from "../skillpics/hunt.png";
 
-const SkillCard = ({ skill }) => {
+const SkillCard = ({ skill, mExp }) => {
   let skillImage;
   if (skill.name == "Woodcutting") {
     skillImage = tree;
@@ -71,7 +71,7 @@ const SkillCard = ({ skill }) => {
           }}
         />
       </Box>
-      <ExperienceBar experience={skill.experience} />
+      <ExperienceBar experience={skill.experience} mExp={mExp} />
     </Card>
   );
 };
