@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { GameContext } from '../GameContext';
 import ResourcePanel from '../Skills/ResourcePanel';
 import SkillCard from '../Skills/SkillCard';
@@ -19,26 +19,28 @@ const MainGame = () => {
       {skillsData.map((skill) => (
         <SkillCard key={skill.name} skill={skill} mExp={maxExperience} />
       ))}
-      <Button
-        onClick={resetGameState}
-        sx={{
-          bgcolor: 'red',
-          color: 'white',
-          '&:hover': { bgcolor: 'green' },
-        }}
-      >
-        Reset
-      </Button>
-      <Button
-        onClick={() => addCoins()}
-        sx={{
-          bgcolor: 'yellow',
-          color: 'black',
-          '&:hover': { bgcolor: 'green' },
-        }}
-      >
-        Add Coins
-      </Button>
+      <Stack spacing={2} direction="row" sx={{ height: '40px' }}>
+        <Button
+          onClick={resetGameState}
+          sx={{
+            bgcolor: 'red',
+            color: 'white',
+            '&:hover': { bgcolor: 'green' },
+          }}
+        >
+          Reset
+        </Button>
+        <Button
+          sx={{
+            bgcolor: 'yellow',
+            color: 'black',
+            '&:hover': { bgcolor: 'green' },
+          }}
+          onClick={() => addCoins()}
+        >
+          Add Coins
+        </Button>
+      </Stack>
     </Box>
   );
 };
