@@ -3,22 +3,17 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import ExperienceBar from './ExperienceBar';
-import tree from '../assets/skillpics/tree.png';
-import rock from '../assets/skillpics/rock.png';
-import fish from '../assets/skillpics/fish.png';
-import hunt from '../assets/skillpics/hunt.png';
+import { tree, rock, fish, hunt } from '../assets/skillpics';
+
+const SKILL_IMAGES = {
+  Woodcutting: tree,
+  Mining: rock,
+  Fishing: fish,
+  Hunting: hunt,
+};
 
 const SkillCard = ({ skill, mExp }) => {
-  let skillImage;
-  if (skill.name == 'Woodcutting') {
-    skillImage = tree;
-  } else if (skill.name == 'Mining') {
-    skillImage = rock;
-  } else if (skill.name == 'Fishing') {
-    skillImage = fish;
-  } else if (skill.name == 'Hunting') {
-    skillImage = hunt;
-  }
+  const skillImage = SKILL_IMAGES[skill.name];
 
   return (
     <Card
@@ -32,6 +27,7 @@ const SkillCard = ({ skill, mExp }) => {
         padding: '5px',
         margin: '10px',
         borderRadius: '25px',
+        backgroundColor: 'background.contrast',
         boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.8)', // Box shadow to create the pop-out effect
         transform: 'translateY(-6px)', // Translation to make the card appear lifted
       }}

@@ -15,7 +15,6 @@ const MainGame = () => {
   } = useContext(GameContext);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <ResourcePanel resources={resData} charItems={charItems} />
       <Box
         sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
       >

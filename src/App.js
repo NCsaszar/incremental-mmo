@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,6 +11,7 @@ import MainGame from './gameplay/MainGame';
 import Sellitems from './gameplay/Sellitems';
 import NavButtons from './NavigateButtons';
 import { createTheme, ThemeProvider } from '@mui/material';
+import ResourcePanel from './skills/ResourcePanel';
 
 const App = () => {
   const theme = createTheme({
@@ -20,14 +21,16 @@ const App = () => {
       },
       secondary: {
         main: '#ABB2BF', // Another color from the One Dark Pro theme
+        contrastText: '#4F545C', // New secondary color for contrast
       },
       background: {
         default: '#3B4048', // Default background color in One Dark Pro
         paper: '#3B4048', // Background color for "paper" surfaces, like cards
+        contrast: '#4F545C', // New background color for contrast
       },
       text: {
-        primary: '#ABB2BF', // Primary text color
-        secondary: '#5C6370', // Secondary text color
+        primary: '#5C6370', // Primary text color
+        secondary: '#ABB2BF', // Secondary text color
       },
     },
     components: {
@@ -35,10 +38,10 @@ const App = () => {
         styleOverrides: {
           root: {
             color: 'white',
-            backgroundColor: '#3B4048',
+            backgroundColor: '#4F545C',
             '&:hover': {
               color: 'white',
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              backgroundColor: '#ABB2BF',
             },
           },
         },
@@ -64,8 +67,9 @@ const App = () => {
   return (
     <Router>
       <ThemeProvider theme={theme}>
-        <NavButtons />
         <GameProvider>
+          <NavButtons />
+          <ResourcePanel />
           <Routes>
             <Route path="/game" element={<MainGame />} />
             <Route path="/sell" element={<Sellitems />} />

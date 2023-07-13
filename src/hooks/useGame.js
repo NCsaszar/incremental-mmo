@@ -12,22 +12,41 @@ export const useGame = () => {
   const [skillsData, setSkillsData] = useState(skills);
   const [resData, setResData] = useState(resources);
   const [charItems, setCharItems] = useState(characterItems);
+  const [activeSkill, setActiveSkill] = useState(null);
 
   // This function will return updated skill object
   const updateSkill = (skill, gameTickMS, maxExperience) => {
-    const updatedSkill = { ...skill };
-    updatedSkill.tickCount += gameTickMS;
+    if (activeSkill && skill.name === activeSkill.name) {
+      const updatedSkill = { ...skill };
+      updatedSkill.tickCount += gameTickMS;
 
-    if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
-      updatedSkill.tickCount = 0;
-      if (updatedSkill.experience < maxExperience) {
-        updatedSkill.experience += updatedSkill.tickExperience;
-      } else {
-        updatedSkill.experience = maxExperience;
+      if (updatedSkill.tickCount >= updatedSkill.tickInterval) {
+        updatedSkill.tickCount = 0;
+        if (updatedSkill.experience < maxExperience) {
+          updatedSkill.experience += updatedSkill.tickExperience;
+        } else {
+          updatedSkill.experience = maxExperience;
+        }
+        // update corresponding resource when skill is trained
+        setResData((prevResData) => {
+          const updatedResData = prevResData.map((resource) => {
+            if (
+              resource.skill === updatedSkill.name &&
+              updatedSkill.tickCount === 0
+            ) {
+              return { ...resource, qty: resource.qty + resource.base };
+            }
+            return resource;
+          });
+          // save the updated resources data in Firebase
+          set(ref(database, 'games/gameId/resData'), updatedResData);
+          return updatedResData;
+        });
       }
-    }
 
-    return updatedSkill;
+      return updatedSkill;
+    }
+    return skill; // if it's not the active skill, just return it unchanged
   };
 
   // All your functions for managing game state and the game loop goes here...
@@ -108,31 +127,15 @@ export const useGame = () => {
       const updatedSkills = prevSkills.map((skill) =>
         updateSkill(skill, gameTickMS, maxExperience)
       );
-
-      setResData((prevResData) => {
-        const updatedResData = prevResData.map((resource) => {
-          // find the corresponding skill for this resource
-          const correspondingSkill = updatedSkills.find(
-            (skill) => skill.name === resource.skill
-          );
-
-          if (correspondingSkill && correspondingSkill.tickCount === 0) {
-            return { ...resource, qty: resource.qty + resource.base };
-          }
-
-          return resource;
-        });
-
-        // save the updated game state in Firebase
-        set(ref(database, 'games/gameId/skillsData'), updatedSkills);
-        set(ref(database, 'games/gameId/resData'), updatedResData);
-
-        return updatedResData;
-      });
-
+      // save the updated skills data in Firebase
+      set(ref(database, 'games/gameId/skillsData'), updatedSkills);
       return updatedSkills;
     });
   }
+
+  const changeActiveSkill = (skillName) => {
+    setActiveSkill(skillsData.find((skill) => skill.name === skillName));
+  };
 
   useEffect(() => {
     // Load the game state when the component mounts
@@ -155,5 +158,6 @@ export const useGame = () => {
     resetGameState,
     addCoins,
     removeResource,
+    changeActiveSkill,
   };
 };

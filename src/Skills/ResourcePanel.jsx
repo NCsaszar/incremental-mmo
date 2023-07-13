@@ -1,61 +1,50 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
-import fish from '../assets/resourcepics/fish.png';
-import ore from '../assets/resourcepics/ore.png';
-import log from '../assets/resourcepics/log.png';
-import leather from '../assets/resourcepics/leather.png';
-import coins from '../assets/resourcepics/coins.png';
+import { fish, ore, log, leather, coins } from '../assets/resourcepics';
 import { Typography } from '@mui/material';
+import { GameContext } from '../GameContext';
 
-const ResourcePanel = ({ resources, charItems }) => {
-  let fishCt = resources.filter((res) => res.name == 'fish')[0].qty;
-  let logCt = resources.filter((res) => res.name == 'log')[0].qty;
-  let oreCt = resources.filter((res) => res.name == 'ore')[0].qty;
-  let leatherCt = resources.filter((res) => res.name == 'leather')[0].qty;
-  let coinsCt = charItems.filter((item) => item.name == 'coins')[0].qty;
+const resourceImages = {
+  fish: fish,
+  log: log,
+  ore: ore,
+  leather: leather,
+  coins: coins,
+};
+
+const ResourcePanel = () => {
+  const { resData, charItems } = useContext(GameContext);
+  const resources = [
+    ...resData,
+    ...charItems.filter((item) => item.name === 'coins'),
+  ];
 
   return (
     <Card
       sx={{
-        width: '100vw',
+        width: '95vw',
         height: '100%',
         display: 'flex',
         padding: '5px',
         mb: '10px',
+        bgcolor: 'background.contrast',
       }}
     >
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img src={fish} alt="fishres" />
-        <Typography sx={{ mx: '10px' }}>{fishCt}</Typography>
-      </Box>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img src={ore} alt="oreres" />
-        <Typography sx={{ mx: '10px' }}>{oreCt}</Typography>
-      </Box>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img src={log} alt="logres" />
-        <Typography sx={{ mx: '10px' }}>{logCt}</Typography>
-      </Box>
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img src={leather} alt="leatherres" />
-        <Typography sx={{ mx: '10px' }}>{leatherCt}</Typography>
-      </Box>
+      {resources.map((res) => (
+        <Box
+          key={res.name}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <img src={resourceImages[res.name]} alt={res.name} />
+          <Typography sx={{ mx: '10px' }}>{res.qty}</Typography>
+        </Box>
+      ))}
       <Box sx={{ flexGrow: 1 }} />
-      <Box
-        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-      >
-        <img src={coins} alt="coins" />
-        <Typography sx={{ mx: '10px' }}>{coinsCt}</Typography>
-      </Box>
     </Card>
   );
 };

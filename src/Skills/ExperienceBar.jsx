@@ -6,11 +6,9 @@ import { styled } from '@mui/system';
 
 const ProgressBar = styled(LinearProgress)(({ theme }) => ({
   '& .MuiLinearProgress-bar': {
-    backgroundColor: '#4CAF50', // Change the color of the progress bar
+    backgroundColor: '#ABB2BF', // Change the color of the progress bar
   },
-  '& .MuiLinearProgress-colorPrimary': {
-    backgroundColor: '#ABB2BF', // Change the background color of the progress bar
-  },
+  backgroundColor: '#3B4048', // Change the background color of the progress bar
   height: 25, // Adjust the height as per your preference
   borderRadius: 12, // Optionally, adjust the border radius
 }));
