@@ -1,66 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Typography, Box, Card, Stack, Button, TextField } from '@mui/material';
-import { log, ore, fish, leather } from '../resourcepics';
+import { log, ore, fish, leather } from '../assets/resourcepics';
+import { cardStyle, sellbtnstyle, allbtnstyle } from './SkillCardStyles';
+import { GameContext } from '../GameContext';
 
 const SkillCard = ({ resource }) => {
   const [quantity, setQuantity] = useState(0);
-  let resourceName;
-  let skillImage;
-  if (resource.name == 'log') {
-    skillImage = log;
-  } else if (resource.name == 'ore') {
-    skillImage = ore;
-  } else if (resource.name == 'fish') {
-    skillImage = fish;
-  } else if (resource.name == 'leather') {
-    skillImage = leather;
-  }
+  const { addCoins, removeResource } = useContext(GameContext);
 
-  if (resource.name == 'log') {
-    resourceName = 'Logs';
-  } else if (resource.name == 'ore') {
-    resourceName = 'Ores';
-  } else if (resource.name == 'fish') {
-    resourceName = 'Fish';
-  } else if (resource.name == 'leather') {
-    resourceName = 'Leather';
-  }
-
-  const gradientBackground =
-    'radial-gradient(circle, rgba(187,187,187,1) 35%, rgba(11,251,241,1) 100%, rgba(69,89,93,1) 100%)';
-  const cardStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '200px',
-    minHeight: '200px',
-    padding: '5px',
-    margin: '10px',
-    borderRadius: '25px',
-    background: gradientBackground,
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.8)', // Box shadow to create the pop-out effect
-    transform: 'translateY(-6px)', // Translation to make the card appear lifted
+  const resources = {
+    log: { name: 'Logs', image: log },
+    ore: { name: 'Ores', image: ore },
+    fish: { name: 'Fish', image: fish },
+    leather: { name: 'Leather', image: leather },
   };
 
-  const sellbtnstyle = {
-    bgcolor: 'red',
-    color: 'white',
-    '&:hover': {
-      transform: 'scale(1.05)',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.25)',
-      bgcolor: 'red',
-    },
-  };
-
-  const allbtnstyle = {
-    bgcolor: 'green',
-    color: 'white',
-    '&:hover': {
-      transform: 'scale(1.05)',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.25)',
-      bgcolor: 'green',
-    },
-  };
+  const { name: resourceName, image: skillImage } = resources[resource.name];
 
   // Define a ref to access the input element
   const inputRef = useRef();
@@ -79,11 +34,18 @@ const SkillCard = ({ resource }) => {
   };
 
   const handleChange = (event) => {
-    setQuantity(event.target.value);
+    setQuantity(Number(event.target.value));
   };
 
   const handleAllBtn = () => {
     setQuantity(resource.qty);
+  };
+
+  const handleSellBtn = (resource, qty) => {
+    let { sellPrice } = resource;
+    let coinsToAdd = qty * sellPrice;
+    addCoins(coinsToAdd);
+    removeResource(resource, qty);
   };
 
   return (
@@ -95,8 +57,6 @@ const SkillCard = ({ resource }) => {
           sx={{
             mb: '15px',
             textAlign: 'center',
-            color: 'black', // Custom text color
-            fontWeight: 'bold', // Custom font weight
             textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', // Custom text shadow
           }}
         >
@@ -156,7 +116,12 @@ const SkillCard = ({ resource }) => {
         <Button onClick={handleAllBtn} sx={allbtnstyle}>
           All
         </Button>
-        <Button sx={{ ...sellbtnstyle, width: '90%' }}>Sell</Button>
+        <Button
+          sx={{ ...sellbtnstyle, width: '90%' }}
+          onClick={() => handleSellBtn(resource, quantity)}
+        >
+          Sell
+        </Button>
       </Stack>
     </Card>
   );

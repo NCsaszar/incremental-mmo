@@ -1,7 +1,7 @@
 import { Card, Box } from '@mui/material';
 import React, { useContext } from 'react';
-import { fish, log, leather, ore } from '../resourcepics';
-import SellCard from '../Skills/SellCard';
+import { fish, log, leather, ore } from '../assets/resourcepics';
+import SellCard from '../skills/SellCard';
 import { GameContext } from '../GameContext';
 
 const Sellitems = () => {
@@ -22,7 +22,6 @@ const Sellitems = () => {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          bgcolor: 'aqua',
           padding: '20px',
           borderRadius: '10px',
           width: '85%',

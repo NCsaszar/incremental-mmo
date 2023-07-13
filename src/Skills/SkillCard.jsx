@@ -3,10 +3,10 @@ import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import ExperienceBar from "./ExperienceBar";
-import tree from "../skillpics/tree.png";
-import rock from "../skillpics/rock.png";
-import fish from "../skillpics/fish.png";
-import hunt from "../skillpics/hunt.png";
+import tree from "../assets/skillpics/tree.png";
+import rock from "../assets/skillpics/rock.png";
+import fish from "../assets/skillpics/fish.png";
+import hunt from "../assets/skillpics/hunt.png";
 
 const SkillCard = ({ skill, mExp }) => {
   let skillImage;

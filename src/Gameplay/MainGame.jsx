@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Box, Button, Stack } from '@mui/material';
 import { GameContext } from '../GameContext';
-import ResourcePanel from '../Skills/ResourcePanel';
-import SkillCard from '../Skills/SkillCard';
+import ResourcePanel from '../skills/ResourcePanel';
+import SkillCard from '../skills/SkillCard';
 
 const MainGame = () => {
   const {

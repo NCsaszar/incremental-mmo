@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { database } from "../firebase";
-import { ref, set, onValue } from "firebase/database";
-import skills from "../Skills/skillsData";
-import resources from "../Skillresources/resources";
-import characterItems from "../character/charitems";
+import { useEffect, useState } from 'react';
+import { database } from '../firebase';
+import { ref, set, onValue } from 'firebase/database';
+import skills from '../gamedata/skillsData';
+import resources from '../gamedata/resourceData';
+import characterItems from '../gamedata/charItemsData';
 
 export const useGame = () => {
   const gameTickMS = 200;
@@ -32,22 +32,22 @@ export const useGame = () => {
 
   // All your functions for managing game state and the game loop goes here...
   function saveGameState() {
-    set(ref(database, "games/gameId/skillsData"), skillsData);
-    set(ref(database, "games/gameId/resData"), resData);
-    set(ref(database, "games/gameId/charItems"), charItems); // Save charItems to Firebase
+    set(ref(database, 'games/gameId/skillsData'), skillsData);
+    set(ref(database, 'games/gameId/resData'), resData);
+    set(ref(database, 'games/gameId/charItems'), charItems); // Save charItems to Firebase
   }
 
   // Reset game state
   function resetGameState() {
-    set(ref(database, "games/gameId/skillsData"), skills);
-    set(ref(database, "games/gameId/resData"), resources);
-    set(ref(database, "games/gameId/charItems"), characterItems);
+    set(ref(database, 'games/gameId/skillsData'), skills);
+    set(ref(database, 'games/gameId/resData'), resources);
+    set(ref(database, 'games/gameId/charItems'), characterItems);
   }
 
   // Load game state
   function loadGameState() {
     const skillsPromise = new Promise((resolve) => {
-      onValue(ref(database, "games/gameId/skillsData"), (snapshot) => {
+      onValue(ref(database, 'games/gameId/skillsData'), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : skills; // use skills as the default data
         setSkillsData(data);
         resolve();
@@ -55,7 +55,7 @@ export const useGame = () => {
     });
 
     const resPromise = new Promise((resolve) => {
-      onValue(ref(database, "games/gameId/resData"), (snapshot) => {
+      onValue(ref(database, 'games/gameId/resData'), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : resources; // use resources as the default data
         setResData(data);
         resolve();
@@ -63,7 +63,7 @@ export const useGame = () => {
     });
 
     const charItemsPromise = new Promise((resolve) => {
-      onValue(ref(database, "games/gameId/charItems"), (snapshot) => {
+      onValue(ref(database, 'games/gameId/charItems'), (snapshot) => {
         const data = snapshot.exists() ? snapshot.val() : characterItems;
         setCharItems(data);
         resolve();
@@ -72,19 +72,33 @@ export const useGame = () => {
     return Promise.all([skillsPromise, resPromise, charItemsPromise]);
   }
 
+  const removeResource = (resource, qty) => {
+    setResData((prevResData) => {
+      const updatedResData = prevResData.map((res) => {
+        if (res.name == resource.name) {
+          return { ...res, qty: res.qty - qty };
+        } else {
+          return res;
+        }
+      });
+      set(ref(database, 'games/gameId/resData'), updatedResData);
+      return updatedResData;
+    });
+  };
+
   const addCoins = (amt) => {
     setCharItems((prevCharItems) => {
       const updatedCharItems = prevCharItems.map((item) => {
-        if (item.name === "coins") {
+        if (item.name === 'coins') {
           return {
             ...item,
-            qty: item.qty + (amt || 100),
+            qty: item.qty + amt,
           };
         } else {
           return item;
         }
       });
-      set(ref(database, "games/gameId/charItems"), updatedCharItems);
+      set(ref(database, 'games/gameId/charItems'), updatedCharItems);
       return updatedCharItems;
     });
   };
@@ -110,8 +124,8 @@ export const useGame = () => {
         });
 
         // save the updated game state in Firebase
-        set(ref(database, "games/gameId/skillsData"), updatedSkills);
-        set(ref(database, "games/gameId/resData"), updatedResData);
+        set(ref(database, 'games/gameId/skillsData'), updatedSkills);
+        set(ref(database, 'games/gameId/resData'), updatedResData);
 
         return updatedResData;
       });
@@ -134,5 +148,12 @@ export const useGame = () => {
   }, []);
 
   // Return everything that your components might need from this hook
-  return { skillsData, resData, charItems, resetGameState, addCoins };
+  return {
+    skillsData,
+    resData,
+    charItems,
+    resetGameState,
+    addCoins,
+    removeResource,
+  };
 };
