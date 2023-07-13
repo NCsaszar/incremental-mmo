@@ -1,11 +1,9 @@
-import React from 'react';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
-import ExperienceBar from './ExperienceBar';
+import React, { useState, useRef } from 'react';
+import { Typography, Box, Card, Stack, Button, TextField } from '@mui/material';
 import { log, ore, fish, leather } from '../resourcepics';
 
 const SkillCard = ({ resource }) => {
+  const [quantity, setQuantity] = useState(0);
   let resourceName;
   let skillImage;
   if (resource.name == 'log') {
@@ -35,7 +33,7 @@ const SkillCard = ({ resource }) => {
     flexDirection: 'column',
     alignItems: 'center',
     width: '200px',
-    height: '200px',
+    minHeight: '200px',
     padding: '5px',
     margin: '10px',
     borderRadius: '25px',
@@ -44,13 +42,58 @@ const SkillCard = ({ resource }) => {
     transform: 'translateY(-6px)', // Translation to make the card appear lifted
   };
 
+  const sellbtnstyle = {
+    bgcolor: 'red',
+    color: 'white',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.25)',
+      bgcolor: 'red',
+    },
+  };
+
+  const allbtnstyle = {
+    bgcolor: 'green',
+    color: 'white',
+    '&:hover': {
+      transform: 'scale(1.05)',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.25)',
+      bgcolor: 'green',
+    },
+  };
+
+  // Define a ref to access the input element
+  const inputRef = useRef();
+
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
+  const handleBlur = () => {
+    if (quantity > resource.qty) {
+      setQuantity(resource.qty);
+    }
+    if (!quantity) {
+      setQuantity(0);
+    }
+  };
+
+  const handleChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
+  const handleAllBtn = () => {
+    setQuantity(resource.qty);
+  };
+
   return (
     <Card sx={cardStyle}>
       <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
         <Typography
           component="div"
-          variant="h5"
+          variant="h6"
           sx={{
+            mb: '15px',
             textAlign: 'center',
             color: 'black', // Custom text color
             fontWeight: 'bold', // Custom font weight
@@ -71,11 +114,50 @@ const SkillCard = ({ resource }) => {
           src={skillImage}
           alt={resource.name}
           style={{
-            width: '25px',
-            height: '25px',
+            width: '40px',
+            height: '40px',
           }}
         />
       </Box>
+      <Typography>You own: {resource.qty}</Typography>
+      <Stack
+        direction="column"
+        spacing={1}
+        sx={{ justifyContent: 'center', alignItems: 'center' }}
+      >
+        <TextField
+          type="number"
+          inputProps={{
+            min: 0,
+            max: resource.qty,
+          }}
+          value={quantity}
+          inputRef={inputRef}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          sx={{
+            width: '100px',
+            '& .MuiOutlinedInput-input': {
+              minHeight: '0px',
+              textAlign: 'center',
+              height: '1rem',
+              // Adjusts the actual input field
+              padding: '10px 14px', // Changes vertical padding to 10px and horizontal padding to 14px
+            },
+            margin: '5px',
+            '& .MuiOutlinedInput-root': {
+              '&.Mui-focused fieldset': {
+                borderColor: 'teal',
+              },
+            },
+          }}
+        />
+        <Button onClick={handleAllBtn} sx={allbtnstyle}>
+          All
+        </Button>
+        <Button sx={{ ...sellbtnstyle, width: '90%' }}>Sell</Button>
+      </Stack>
     </Card>
   );
 };

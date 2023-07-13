@@ -55,5 +55,12 @@ html {
 body {
   background-color: grey;
 }
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-/* Optionally, you can add additional styles specific to your game here */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
