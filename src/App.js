@@ -22,7 +22,7 @@ const App = () => {
         main: '#ABB2BF', // Another color from the One Dark Pro theme
       },
       background: {
-        default: '#282C34', // Default background color in One Dark Pro
+        default: '#3B4048', // Default background color in One Dark Pro
         paper: '#3B4048', // Background color for "paper" surfaces, like cards
       },
       text: {
@@ -35,6 +35,7 @@ const App = () => {
         styleOverrides: {
           root: {
             color: 'white',
+            backgroundColor: '#3B4048',
             '&:hover': {
               color: 'white',
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -47,6 +48,13 @@ const App = () => {
           root: {
             backgroundColor: '#3B4048',
             color: '#ABB2BF',
+          },
+        },
+      },
+      MuiTypography: {
+        styleOverrides: {
+          root: {
+            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
           },
         },
       },

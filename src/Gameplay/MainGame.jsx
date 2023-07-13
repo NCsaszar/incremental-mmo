@@ -14,32 +14,18 @@ const MainGame = () => {
     maxExperience,
   } = useContext(GameContext);
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', margin: '20px' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <ResourcePanel resources={resData} charItems={charItems} />
-      {skillsData.map((skill) => (
-        <SkillCard key={skill.name} skill={skill} mExp={maxExperience} />
-      ))}
+      <Box
+        sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+      >
+        {skillsData.map((skill) => (
+          <SkillCard key={skill.name} skill={skill} mExp={maxExperience} />
+        ))}
+      </Box>
       <Stack spacing={2} direction="row" sx={{ height: '40px' }}>
-        <Button
-          onClick={resetGameState}
-          sx={{
-            bgcolor: 'red',
-            color: 'white',
-            '&:hover': { bgcolor: 'green' },
-          }}
-        >
-          Reset
-        </Button>
-        <Button
-          sx={{
-            bgcolor: 'yellow',
-            color: 'black',
-            '&:hover': { bgcolor: 'green' },
-          }}
-          onClick={() => addCoins()}
-        >
-          Add Coins
-        </Button>
+        <Button onClick={resetGameState}>Reset</Button>
+        <Button onClick={() => addCoins()}>Add Coins</Button>
       </Stack>
     </Box>
   );
