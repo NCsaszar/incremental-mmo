@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { database } from '../firebase';
 import { ref, set, onValue } from 'firebase/database';
 import skills from '../gamedata/skillsData';
@@ -12,11 +12,12 @@ export const useGame = () => {
   const [skillsData, setSkillsData] = useState(skills);
   const [resData, setResData] = useState(resources);
   const [charItems, setCharItems] = useState(characterItems);
-  const [activeSkill, setActiveSkill] = useState(null);
+  const [activeSkillName, setActiveSkillName] = useState(null);
+  const activeSkill = useRef(null);
 
   // This function will return updated skill object
   const updateSkill = (skill, gameTickMS, maxExperience) => {
-    if (activeSkill && skill.name === activeSkill.name) {
+    if (activeSkill.current && skill.name === activeSkill.current.name) {
       const updatedSkill = { ...skill };
       updatedSkill.tickCount += gameTickMS;
 
@@ -88,7 +89,26 @@ export const useGame = () => {
         resolve();
       });
     });
-    return Promise.all([skillsPromise, resPromise, charItemsPromise]);
+
+    const activeSkillPromise = new Promise((resolve) => {
+      onValue(ref(database, 'games/gameId/activeSkillName'), (snapshot) => {
+        const skillName = snapshot.exists() ? snapshot.val() : null;
+        setActiveSkillName(skillName);
+        if (skillName) {
+          activeSkill.current = skillsData.find(
+            (skill) => skill.name === skillName
+          );
+        }
+        resolve();
+      });
+    });
+
+    return Promise.all([
+      skillsPromise,
+      resPromise,
+      charItemsPromise,
+      activeSkillPromise,
+    ]);
   }
 
   const removeResource = (resource, qty) => {
@@ -103,6 +123,12 @@ export const useGame = () => {
       set(ref(database, 'games/gameId/resData'), updatedResData);
       return updatedResData;
     });
+  };
+
+  const changeActiveSkill = (skillName) => {
+    activeSkill.current = skillsData.find((skill) => skill.name === skillName);
+    setActiveSkillName(skillName);
+    set(ref(database, 'games/gameId/activeSkillName'), skillName);
   };
 
   const addCoins = (amt) => {
@@ -129,13 +155,10 @@ export const useGame = () => {
       );
       // save the updated skills data in Firebase
       set(ref(database, 'games/gameId/skillsData'), updatedSkills);
+
       return updatedSkills;
     });
   }
-
-  const changeActiveSkill = (skillName) => {
-    setActiveSkill(skillsData.find((skill) => skill.name === skillName));
-  };
 
   useEffect(() => {
     // Load the game state when the component mounts
@@ -155,9 +178,11 @@ export const useGame = () => {
     skillsData,
     resData,
     charItems,
+    maxExperience,
     resetGameState,
     addCoins,
     removeResource,
     changeActiveSkill,
+    activeSkill,
   };
 };

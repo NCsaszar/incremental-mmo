@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import levels from '../gamedata/Levels';
 import { Box, Typography } from '@mui/material';
 import { LinearProgress } from '@mui/material';
 import { styled } from '@mui/system';
+import { GameContext } from '../GameContext';
 
 const ProgressBar = styled(LinearProgress)(({ theme }) => ({
   '& .MuiLinearProgress-bar': {

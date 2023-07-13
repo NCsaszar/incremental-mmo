@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { GameProvider } from './GameContext';
-import MainGame from './gameplay/MainGame';
+import MainGame from './gameplay/TrainSkills';
 import Sellitems from './gameplay/Sellitems';
 import NavButtons from './NavigateButtons';
 import { createTheme, ThemeProvider } from '@mui/material';

@@ -15,11 +15,9 @@ const MainGame = () => {
   } = useContext(GameContext);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box
-        sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
-      >
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
         {skillsData.map((skill) => (
-          <SkillCard key={skill.name} skill={skill} mExp={maxExperience} />
+          <SkillCard key={skill.name} skill={skill} />
         ))}
       </Box>
       <Stack spacing={2} direction="row" sx={{ height: '40px' }}>
