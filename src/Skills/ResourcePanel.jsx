@@ -38,10 +38,26 @@ const ResourcePanel = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            mx: '5px',
           }}
         >
           <img src={resourceImages[res.name]} alt={res.name} />
-          <Typography sx={{ mx: '10px' }}>{res.qty}</Typography>
+          <Box
+            sx={{
+              bgcolor: 'background.default',
+              borderRadius: '5px',
+              padding: '3px',
+              mx: '5px',
+            }}
+          >
+            <Typography
+              sx={{
+                mx: '10px',
+              }}
+            >
+              {res.qty}
+            </Typography>
+          </Box>
         </Box>
       ))}
       <Box sx={{ flexGrow: 1 }} />

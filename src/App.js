@@ -9,6 +9,7 @@ import {
 import { GameProvider } from './GameContext';
 import MainGame from './gameplay/TrainSkills';
 import Sellitems from './gameplay/Sellitems';
+import UpgradeSkills from './gameplay/UpgradeSkills';
 import NavButtons from './NavigateButtons';
 import { createTheme, ThemeProvider } from '@mui/material';
 import ResourcePanel from './skills/ResourcePanel';
@@ -73,7 +74,7 @@ const App = () => {
           <Routes>
             <Route path="/game" element={<MainGame />} />
             <Route path="/sell" element={<Sellitems />} />
-            <Route path="/" element={<Sellitems />} />
+            <Route path="/" element={<UpgradeSkills />} />
           </Routes>
         </GameProvider>
       </ThemeProvider>

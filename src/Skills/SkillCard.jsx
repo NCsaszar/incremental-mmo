@@ -42,6 +42,7 @@ const imageStyle = {
 };
 
 const SkillCard = ({ skill }) => {
+  let active = false;
   const skillImage = SKILL_IMAGES[skill.name];
   const { changeActiveSkill, activeSkill, maxExperience } =
     useContext(GameContext);
@@ -56,10 +57,29 @@ const SkillCard = ({ skill }) => {
       changeActiveSkill(null);
     }
   };
+  if (activeSkill.current && name === activeSkill?.current.name) {
+    active = true;
+  } else {
+    active = false;
+  }
 
   return (
-    <Card sx={cardStyle}>
-      <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
+    <Card
+      sx={{
+        ...cardStyle,
+        borderColor: active ? 'green' : 'transparent',
+        borderWidth: active ? '2px' : '0',
+        borderStyle: active ? 'solid' : null,
+      }}
+    >
+      <Typography
+        sx={{
+          color: 'white',
+        }}
+      >
+        {active ? 'Active' : ''}
+      </Typography>
+      <Box sx={{ textAlign: 'center', marginTop: active ? '0px' : '16px' }}>
         <Typography component="div" variant="h5" sx={typoStyle}>
           {skill.name}
         </Typography>

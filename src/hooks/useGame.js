@@ -4,12 +4,14 @@ import { ref, set, onValue } from 'firebase/database';
 import skills from '../gamedata/skillsData';
 import resources from '../gamedata/resourceData';
 import characterItems from '../gamedata/charItemsData';
+import upgradeData from '../gamedata/upgradeData';
 
 export const useGame = () => {
   const gameTickMS = 200;
   const maxExperience = 900;
 
   const [skillsData, setSkillsData] = useState(skills);
+  const [upgradeTiers, setUpgradeTiers] = useState(upgradeData);
   const [resData, setResData] = useState(resources);
   const [charItems, setCharItems] = useState(characterItems);
   const [activeSkillName, setActiveSkillName] = useState(null);
@@ -62,6 +64,7 @@ export const useGame = () => {
     set(ref(database, 'games/gameId/skillsData'), skills);
     set(ref(database, 'games/gameId/resData'), resources);
     set(ref(database, 'games/gameId/charItems'), characterItems);
+    set(ref(database, 'games/gameId/upgradeData'), upgradeData);
   }
 
   // Load game state
@@ -103,11 +106,20 @@ export const useGame = () => {
       });
     });
 
+    const upgradeTiersPromise = new Promise((resolve) => {
+      onValue(ref(database, 'games/gameId/upgradeData'), (snapshot) => {
+        const data = snapshot.exists() ? snapshot.val() : upgradeData; // use skills as the default data
+        setUpgradeTiers(data);
+        resolve();
+      });
+    });
+
     return Promise.all([
       skillsPromise,
       resPromise,
       charItemsPromise,
       activeSkillPromise,
+      upgradeTiersPromise,
     ]);
   }
 
@@ -148,6 +160,45 @@ export const useGame = () => {
     });
   };
 
+  const upgradeSkill = async (skillName, upgradeAmount = 0.25) => {
+    // Create a new array with updated data
+    const updatedData = resData.map((resource) => {
+      if (resource.skill === skillName) {
+        return {
+          ...resource,
+          base: resource.base + upgradeAmount,
+        };
+      } else {
+        return resource;
+      }
+    });
+
+    // Create a new array with updated upgrade tiers
+    const updatedTiers = upgradeTiers.map((tier) => {
+      if (tier.skill === skillName) {
+        return {
+          ...tier,
+          tier: tier.tier + 1,
+        };
+      } else {
+        return tier;
+      }
+    });
+
+    // Update state with the new data
+    setResData(updatedData);
+    setUpgradeTiers(updatedTiers);
+
+    try {
+      await Promise.all([
+        set(ref(database, 'games/gameId/resData'), updatedData),
+        set(ref(database, 'games/gameId/upgradeData'), updatedTiers),
+      ]);
+    } catch (error) {
+      console.error('Firebase write failed:', error);
+    }
+  };
+
   function gameTick() {
     setSkillsData((prevSkills) => {
       const updatedSkills = prevSkills.map((skill) =>
@@ -184,5 +235,7 @@ export const useGame = () => {
     removeResource,
     changeActiveSkill,
     activeSkill,
+    upgradeSkill,
+    upgradeTiers,
   };
 };
