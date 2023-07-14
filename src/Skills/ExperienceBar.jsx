@@ -58,7 +58,7 @@ const ExperienceBar = ({ experience, mExp }) => {
         }}
       >
         <Typography>Experience: {experience}</Typography>
-        <Typography>Level: {currentLevel}/10</Typography>
+        <Typography>Level: {currentLevel}/50</Typography>
         <Box sx={{ width: '100%' }}>
           <ProgressBar
             variant="determinate"

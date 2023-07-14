@@ -40,6 +40,8 @@ const SellCard = ({ resource }) => {
   const handleBlur = () => {
     if (quantity > Math.floor(resource.qty)) {
       setQuantity(Math.floor(resource.qty));
+    } else if (quantity < 0) {
+      setQuantity(0);
     }
     if (!quantity) {
       setQuantity(0);
@@ -48,7 +50,11 @@ const SellCard = ({ resource }) => {
 
   const handleChange = (event) => {
     let value = event.target.value;
-    setQuantity(Math.floor(Number(value)));
+    if (value <= 0) {
+      setQuantity(0);
+    } else {
+      setQuantity(Math.floor(Number(value)));
+    }
   };
 
   const handleAllBtn = () => {
@@ -60,6 +66,7 @@ const SellCard = ({ resource }) => {
     let coinsToAdd = qty * sellPrice;
     addCoins(coinsToAdd);
     removeResource(resource, qty);
+    setQuantity(0);
   };
 
   return (

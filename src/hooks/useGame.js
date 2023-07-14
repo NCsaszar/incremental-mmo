@@ -8,7 +8,7 @@ import upgradeData from '../gamedata/upgradeData';
 
 export const useGame = () => {
   const gameTickMS = 200;
-  const maxExperience = 900;
+  const maxExperience = 432000;
 
   const [skillsData, setSkillsData] = useState(skills);
   const [upgradeTiers, setUpgradeTiers] = useState(upgradeData);
