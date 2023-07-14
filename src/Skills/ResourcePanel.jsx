@@ -55,7 +55,7 @@ const ResourcePanel = () => {
                 mx: '10px',
               }}
             >
-              {res.qty}
+              {Math.floor(res.qty)}
             </Typography>
           </Box>
         </Box>

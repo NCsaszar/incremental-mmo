@@ -1,10 +1,23 @@
 import React, { useState, useRef, useContext } from 'react';
 import { Typography, Box, Card, Stack, Button, TextField } from '@mui/material';
 import { log, ore, fish, leather } from '../assets/resourcepics';
-import { cardStyle, sellbtnstyle, allbtnstyle } from './SkillCardStyles';
+import { sellbtnstyle, allbtnstyle } from './SkillCardStyles';
 import { GameContext } from '../GameContext';
+export const cardStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '200px',
+  minHeight: '200px',
+  padding: '5px',
+  margin: '10px',
+  backgroundColor: 'background.contrast',
+  borderRadius: '25px',
+  boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.8)', // Box shadow to create the pop-out effect
+  transform: 'translateY(-6px)', // Translation to make the card appear lifted
+};
 
-const SkillCard = ({ resource }) => {
+const SellCard = ({ resource }) => {
   const [quantity, setQuantity] = useState(0);
   const { addCoins, removeResource } = useContext(GameContext);
 
@@ -25,8 +38,8 @@ const SkillCard = ({ resource }) => {
   };
 
   const handleBlur = () => {
-    if (quantity > resource.qty) {
-      setQuantity(resource.qty);
+    if (quantity > Math.floor(resource.qty)) {
+      setQuantity(Math.floor(resource.qty));
     }
     if (!quantity) {
       setQuantity(0);
@@ -34,11 +47,12 @@ const SkillCard = ({ resource }) => {
   };
 
   const handleChange = (event) => {
-    setQuantity(Number(event.target.value));
+    let value = event.target.value;
+    setQuantity(Math.floor(Number(value)));
   };
 
   const handleAllBtn = () => {
-    setQuantity(resource.qty);
+    setQuantity(Math.floor(resource.qty));
   };
 
   const handleSellBtn = (resource, qty) => {
@@ -79,7 +93,7 @@ const SkillCard = ({ resource }) => {
           }}
         />
       </Box>
-      <Typography>You own: {resource.qty}</Typography>
+      <Typography>You own: {Math.floor(resource.qty)}</Typography>
       <Stack
         direction="column"
         spacing={1}
@@ -90,8 +104,9 @@ const SkillCard = ({ resource }) => {
           inputProps={{
             min: 0,
             max: resource.qty,
+            step: 1,
           }}
-          value={quantity}
+          value={Math.floor(quantity)}
           inputRef={inputRef}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -100,6 +115,7 @@ const SkillCard = ({ resource }) => {
             width: '100px',
             '& .MuiOutlinedInput-input': {
               minHeight: '0px',
+              color: 'white',
               textAlign: 'center',
               height: '1rem',
               // Adjusts the actual input field
@@ -127,4 +143,4 @@ const SkillCard = ({ resource }) => {
   );
 };
 
-export default SkillCard;
+export default SellCard;

@@ -31,12 +31,6 @@ const Sellitems = () => {
         {resData.map((resource) => (
           <SellCard resource={resource} key={resource.name} />
         ))}
-        {/* <Box>
-          <img src={log} alt="log" />
-          <img src={ore} alt="ore" />
-          <img src={fish} alt="fish" />
-          <img src={leather} alt="leather" />
-        </Box> */}
       </Card>
     </Box>
   );
