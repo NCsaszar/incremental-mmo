@@ -160,42 +160,44 @@ export const useGame = () => {
     });
   };
 
-  const upgradeSkill = async (skillName, upgradeAmount = 0.25) => {
+  const upgradeSkill = async (skillName, upgradeAmount = 0.25, upgradeCost) => {
     // Create a new array with updated data
-    const updatedData = resData.map((resource) => {
-      if (resource.skill === skillName) {
-        return {
-          ...resource,
-          base: resource.base + upgradeAmount,
-        };
-      } else {
-        return resource;
+    if (upgradeCost <= charItems.find((item) => item.name === 'coins').qty) {
+      const updatedData = resData.map((resource) => {
+        if (resource.skill === skillName) {
+          return {
+            ...resource,
+            base: resource.base + upgradeAmount,
+          };
+        } else {
+          return resource;
+        }
+      });
+
+      // Create a new array with updated upgrade tiers
+      const updatedTiers = upgradeTiers.map((tier) => {
+        if (tier.skill === skillName) {
+          return {
+            ...tier,
+            tier: tier.tier + 1,
+          };
+        } else {
+          return tier;
+        }
+      });
+
+      // Update state with the new data
+      setResData(updatedData);
+      setUpgradeTiers(updatedTiers);
+
+      try {
+        await Promise.all([
+          set(ref(database, 'games/gameId/resData'), updatedData),
+          set(ref(database, 'games/gameId/upgradeData'), updatedTiers),
+        ]);
+      } catch (error) {
+        console.error('Firebase write failed:', error);
       }
-    });
-
-    // Create a new array with updated upgrade tiers
-    const updatedTiers = upgradeTiers.map((tier) => {
-      if (tier.skill === skillName) {
-        return {
-          ...tier,
-          tier: tier.tier + 1,
-        };
-      } else {
-        return tier;
-      }
-    });
-
-    // Update state with the new data
-    setResData(updatedData);
-    setUpgradeTiers(updatedTiers);
-
-    try {
-      await Promise.all([
-        set(ref(database, 'games/gameId/resData'), updatedData),
-        set(ref(database, 'games/gameId/upgradeData'), updatedTiers),
-      ]);
-    } catch (error) {
-      console.error('Firebase write failed:', error);
     }
   };
 
