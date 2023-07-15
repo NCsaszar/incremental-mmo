@@ -65,6 +65,9 @@ export const useGame = () => {
     set(ref(database, 'games/gameId/resData'), resources);
     set(ref(database, 'games/gameId/charItems'), characterItems);
     set(ref(database, 'games/gameId/upgradeData'), upgradeData);
+    setActiveSkillName(null);
+    activeSkill.current = null;
+    set(ref(database, 'games/gameId/activeSkillName'), null);
   }
 
   // Load game state

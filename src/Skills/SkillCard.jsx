@@ -95,7 +95,7 @@ const SkillCard = ({ skill }) => {
         <img src={skillImage} alt={skill.name} style={imageStyle} />
       </Box>
       <ExperienceBar
-        experience={skill.experience.toLocaleString()}
+        experience={skill.experience}
         mExp={maxExperience}
       />
       <Stack direction="row" spacing={1}>

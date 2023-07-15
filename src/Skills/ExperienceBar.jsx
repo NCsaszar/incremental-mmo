@@ -57,7 +57,7 @@ const ExperienceBar = ({ experience, mExp }) => {
           margin: '20px',
         }}
       >
-        <Typography>Experience: {experience}</Typography>
+        <Typography>Experience: {experience.toLocaleString()}</Typography>
         <Typography>Level: {currentLevel}/50</Typography>
         <Box sx={{ width: '100%' }}>
           <ProgressBar
