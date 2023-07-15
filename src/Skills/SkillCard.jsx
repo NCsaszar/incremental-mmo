@@ -94,7 +94,10 @@ const SkillCard = ({ skill }) => {
       >
         <img src={skillImage} alt={skill.name} style={imageStyle} />
       </Box>
-      <ExperienceBar experience={skill.experience} mExp={maxExperience} />
+      <ExperienceBar
+        experience={skill.experience.toLocaleString()}
+        mExp={maxExperience}
+      />
       <Stack direction="row" spacing={1}>
         <Button onClick={startSkill} sx={{ bgcolor: 'background.default' }}>
           Start

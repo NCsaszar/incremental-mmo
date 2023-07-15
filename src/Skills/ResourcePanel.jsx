@@ -55,7 +55,7 @@ const ResourcePanel = () => {
                 mx: '10px',
               }}
             >
-              {Math.floor(res.qty)}
+              {Math.floor(res.qty).toLocaleString()}
             </Typography>
           </Box>
         </Box>

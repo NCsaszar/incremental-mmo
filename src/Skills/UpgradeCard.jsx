@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { trap, fishpole, axe, pick } from '../assets/upgradepics';
 import { Box, Button, Card, Typography } from '@mui/material';
+import { GameContext } from '../GameContext';
+import { coins } from '../assets/resourcepics';
 
 const upgrades = {
   Woodcutting: { name: 'Axe Upgrade', image: axe },
@@ -32,23 +34,50 @@ const imageStyle = {
   height: '75px',
 };
 
-const UpgradeCard = ({ skill, upgradeSkill,resData }) => {
+const UpgradeCard = ({ skill, upgradeSkill, resData }) => {
+  const { upgradeTiers } = useContext(GameContext);
   const { image: upgradePic, name: upgradeName } = upgrades[skill.name];
+
+  const upgradeTier = upgradeTiers.find((tier) => tier.skill === skill.name);
+  const tier = upgradeTier ? upgradeTier.tier : 0;
+
+  const calculateUpgradeCost = (skillName, tier) => {
+    const baseLogarithm = 10;
+    const multiplier = 1000;
+    const exponent = 2; // this will provide quadratic growth
+
+    // The cost is calculated based on the current tier
+    const cost = Math.pow(tier + 1, exponent) * multiplier;
+
+    // Round the cost to the nearest whole number for simplicity
+    const roundedCost = Math.ceil(cost);
+
+    console.log(
+      `The cost to upgrade ${skillName} to tier ${tier + 1} is ${roundedCost}`
+    );
+
+    return roundedCost;
+  };
+
+  let upgradeCost = calculateUpgradeCost(skill.name, tier).toLocaleString();
 
   const handleUpgrade = () => {
     upgradeSkill(skill.name);
   };
-
 
   return (
     <Card sx={cardStyle}>
       <Typography variant="h4" fontWeight="bold" sx={{ mt: '10px' }}>
         {upgradeName}
       </Typography>
+      <Typography>Tier: {tier}</Typography>
       <img src={upgradePic} alt={upgradeName} style={imageStyle} />
-      <Typography>Increase gathering rate: +0.25</Typography>
+      <Typography>Increase gathering rate</Typography>
       <Box>
-        <Typography>Upgrade Cost: TBD</Typography>
+        <Box sx={{ display: 'flex' }}>
+          <Typography>Upgrade Cost: {upgradeCost}</Typography>
+          <img src={coins} alt="coins" />
+        </Box>
         <Button onClick={handleUpgrade} sx={{ bgcolor: 'background.default' }}>
           Upgrade
         </Button>

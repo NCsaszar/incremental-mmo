@@ -100,7 +100,7 @@ const SellCard = ({ resource }) => {
           }}
         />
       </Box>
-      <Typography>You own: {Math.floor(resource.qty)}</Typography>
+      <Typography>You own: {Math.floor(resource.qty).toLocaleString()}</Typography>
       <Stack
         direction="column"
         spacing={1}
