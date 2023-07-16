@@ -13,7 +13,7 @@ export const cardStyle = {
   margin: '10px',
   backgroundColor: 'background.contrast',
   borderRadius: '25px',
-  boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.8)', // Box shadow to create the pop-out effect
+  boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.8)',
   transform: 'translateY(-6px)', // Translation to make the card appear lifted
 };
 
@@ -73,8 +73,8 @@ const SellCard = ({ resource }) => {
     <Card sx={cardStyle}>
       <Box sx={{ textAlign: 'center', marginTop: '16px' }}>
         <Typography
-          component="div"
-          variant="h6"
+          component='div'
+          variant='h6'
           sx={{
             mb: '15px',
             textAlign: 'center',
@@ -100,14 +100,16 @@ const SellCard = ({ resource }) => {
           }}
         />
       </Box>
-      <Typography>You own: {Math.floor(resource.qty).toLocaleString()}</Typography>
+      <Typography>
+        You own: {Math.floor(resource.qty).toLocaleString()}
+      </Typography>
       <Stack
-        direction="column"
+        direction='column'
         spacing={1}
         sx={{ justifyContent: 'center', alignItems: 'center' }}
       >
         <TextField
-          type="number"
+          type='number'
           inputProps={{
             min: 0,
             max: resource.qty,
