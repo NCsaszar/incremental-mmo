@@ -52,17 +52,14 @@ const UpgradeCard = ({ skill, upgradeSkill, resData }) => {
     // Round the cost to the nearest whole number for simplicity
     const roundedCost = Math.ceil(cost);
 
-    console.log(
-      `The cost to upgrade ${skillName} to tier ${tier + 1} is ${roundedCost}`
-    );
-
     return roundedCost;
   };
 
   let upgradeCost = calculateUpgradeCost(skill.name, tier).toLocaleString();
+  let upgradeCostNoLocale = calculateUpgradeCost(skill.name, tier);
 
   const handleUpgrade = () => {
-    upgradeSkill(skill.name);
+    upgradeSkill({ skillName: skill.name, upgradeCost: upgradeCostNoLocale });
   };
 
   return (

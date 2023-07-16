@@ -163,9 +163,31 @@ export const useGame = () => {
     });
   };
 
-  const upgradeSkill = async (skillName, upgradeAmount = 0.25, upgradeCost) => {
+  const removeCoins = (amt) => {
+    setCharItems((prevCharItems) => {
+      const updatedCharItems = prevCharItems.map((item) => {
+        if (item.name === 'coins') {
+          return {
+            ...item,
+            qty: item.qty - amt,
+          };
+        } else {
+          return item;
+        }
+      });
+      set(ref(database, 'games/gameId/charItems'), updatedCharItems);
+      return updatedCharItems;
+    });
+  };
+
+  const upgradeSkill = async ({
+    skillName,
+    upgradeAmount = 0.25,
+    upgradeCost,
+  }) => {
     // Create a new array with updated data
-    if (upgradeCost <= charItems.find((item) => item.name === 'coins').qty) {
+    let coinsInBank = charItems.find((item) => item.name === 'coins').qty;
+    if (upgradeCost <= coinsInBank && coinsInBank - upgradeCost >= 0) {
       const updatedData = resData.map((resource) => {
         if (resource.skill === skillName) {
           return {
@@ -188,6 +210,8 @@ export const useGame = () => {
           return tier;
         }
       });
+
+      removeCoins(upgradeCost);
 
       // Update state with the new data
       setResData(updatedData);
